@@ -1,7 +1,6 @@
 //以下より改変して利用。
 //three.js でMMDを使う
 //https://qiita.com/shoichi1023/items/6cbaefe078c33f600bfe
-import { THREE } from "./three.module.js";
 import { MMDLoader } from "./MMDLoader.js";
 
 var mesh, camera, scene, renderer;
