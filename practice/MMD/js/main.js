@@ -42,6 +42,6 @@ window.addEventListener("resize", WindowResizeEvent => {
   renderer.setSize(window.innerWidth, window.innerHeight);
 });
 
-requestAnimationFrame(render);
+requestAnimationFrame(renderer);
 renderer.clear();
 renderer.render(scene, camera);
