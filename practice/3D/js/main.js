@@ -95,7 +95,7 @@ const animate = function () {
   requestAnimationFrame( animate );
   camera.position.set( formData.camera.position.x, formData.camera.position.y, formData.camera.position.z );
   material.color.setRGB( 0.596078431372549, 0, 0 );
-  geometry.setAttribute( "position", new THREE.BufferAttribute( new Float32Array( formData.vertices );, 3 ) );
+  geometry.setAttribute( "position", new THREE.BufferAttribute( new Float32Array( formData.vertices ), 3 ) );
   mesh.rotation.x += 0.01;
   mesh.rotation.y += 0.01;
   renderer.render( scene, camera );
