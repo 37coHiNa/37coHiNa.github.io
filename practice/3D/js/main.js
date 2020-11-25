@@ -9,9 +9,31 @@ const canvas = Object.assign(
   }
 );
 
+const contentArea = Object.assign(
+  document.createElement( "div" ),
+  {
+  }
+);
+Object.assign(
+  contentArea.style,
+  {
+    textAlign: "center"
+  }
+);
+
+document.body.appendChild( contentArea ).appendChild( canvas );
+
+const form = Object.assign(
+  document.createElement( "form" ),
+  {
+  }
+);
+
+document.body.appendChild( form );
+
 const scene = new THREE.Scene();
 const camera = new THREE.PerspectiveCamera( 75, canvas.width / canvas.height, 0.1, 1000 );
-camera.position.z = 5;
+camera.position = new THREE.Vector3( 0, 0, 5 );
 const renderer = new THREE.WebGLRenderer( { canvas } );
 
 const geometry = new THREE.BufferGeometry();
@@ -39,16 +61,3 @@ geometry.setAttribute( "position", new THREE.BufferAttribute( vertices, 3 ) );
 
 animate();
 
-const contentArea = Object.assign(
-  document.createElement( "div" ),
-  {
-  }
-);
-Object.assign(
-  contentArea.style,
-  {
-    textAlign: "center"
-  }
-);
-
-document.body.appendChild( contentArea ).appendChild( canvas );;
