@@ -4,6 +4,13 @@
    <meta charset="utf-8" />
    <title>🐙</title>
    <script type="module">
+    import * as THREE from "./lib/three.module.js";
+    
+    const canvas = document.createElement( "canvas" );
+    const scene = new THREE.Scene();
+    const camera = new THREE.PerspectiveCamera( 75, canvas.width / canvas.height, 0.1, 1000 );
+    
+    console.log( canvas.toDataURL() );
    </script>
  </head>
  <body>
