@@ -14,10 +14,20 @@ const camera = new THREE.PerspectiveCamera( 75, canvas.width / canvas.height, 0.
 camera.position.z = 5;
 const renderer = new THREE.WebGLRenderer( { canvas } );
 
-const geometry = new THREE.BoxGeometry();
+const geometry = new THREE.BufferGeometry();
+const vertices = new Float32Array( [
+	-1.0, -1.0,  1.0,
+	 1.0, -1.0,  1.0,
+	 1.0,  1.0,  1.0,
+
+	 1.0,  1.0,  1.0,
+	-1.0,  1.0,  1.0,
+	-1.0, -1.0,  1.0
+] );
+geometry.setAttribute( "position", new THREE.BufferAttribute( vertices, 3 ) );
 const material = new THREE.MeshBasicMaterial( { color: 0x00ff00 } );
-const cube = new THREE.Mesh( geometry, material );
-scene.add( cube );
+const mesh = new THREE.Mesh( geometry, material );
+scene.add( mesh );
 
 const animate = function () {
   requestAnimationFrame( animate );
