@@ -21,9 +21,6 @@ const vertices = new Float32Array( [ ...(function*(){
     -1.0, -1.0, z,
      1.0, -1.0, z,
      1.0,  1.0, z,
-     1.0,  1.0, z,
-    -1.0,  1.0, z,
-    -1.0, -1.0, z
     ];
     for ( const param of prams ) yield param;
   }
