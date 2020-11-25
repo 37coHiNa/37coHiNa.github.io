@@ -37,23 +37,24 @@ camera.position.set( 0, 0, 5 );
 const renderer = new THREE.WebGLRenderer( { canvas } );
 
 const geometry = new THREE.BufferGeometry();
-const material = new THREE.MeshBasicMaterial( { color: 0x980000 } );
+const material = new THREE.MeshBasicMaterial();
 const mesh = new THREE.Mesh( geometry, material );
 scene.add( mesh );
 
 const animate = function () {
   requestAnimationFrame( animate );
-const vertices = new Float32Array( [ ...(function*(){
-  for ( const z of [ 1.0, -1.0 ] ) {
-    const prams = [
-    -1.0, -1.0, z,
-     1.0, -1.0, z,
-     1.0,  1.0, z,
-    ];
-    for ( const param of prams ) yield param;
-  }
-})() ] );
-geometry.setAttribute( "position", new THREE.BufferAttribute( vertices, 3 ) );
+  material.color.setRGB( 0.596078431372549, 0, 0 );
+  const vertices = new Float32Array( [ ...(function*(){
+    for ( const z of [ 1.0, -1.0 ] ) {
+      const prams = [
+      -1.0, -1.0, z,
+       1.0, -1.0, z,
+       1.0,  1.0, z,
+     ];
+     for ( const param of prams ) yield param;
+    }
+  })() ] );
+  geometry.setAttribute( "position", new THREE.BufferAttribute( vertices, 3 ) );
   mesh.rotation.x += 0.01;
   mesh.rotation.y += 0.01;
   renderer.render( scene, camera );
