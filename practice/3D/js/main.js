@@ -25,7 +25,7 @@ const vertices = new Float32Array( [
 	-1.0, -1.0,  1.0
 ] );
 geometry.setAttribute( "position", new THREE.BufferAttribute( vertices, 3 ) );
-const material = new THREE.MeshBasicMaterial( { color: 0x00ff00 } );
+const material = new THREE.MeshBasicMaterial( { color: 0x980000 } );
 const mesh = new THREE.Mesh( geometry, material );
 scene.add( mesh );
 
@@ -43,6 +43,11 @@ const contentArea = Object.assign(
   {
   }
 );
-contentArea.appendChild( canvas );
+Object.assign(
+  contentArea.style,
+  {
+    textAlign: "center"
+  }
+);
 
-document.body.appendChild( contentArea );
+document.body.appendChild( contentArea ).appendChild( canvas );;
