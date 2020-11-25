@@ -1,5 +1,5 @@
 
-import * as THREE from "./lib/three.module.js";
+import * as THREE from "../lib/three.module.js";
 
 const canvas = Object.assign(
   document.createElement( "canvas" ),
