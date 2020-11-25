@@ -15,6 +15,12 @@ camera.position.z = 5;
 const renderer = new THREE.WebGLRenderer( { canvas } );
 
 const geometry = new THREE.BufferGeometry();
+const material = new THREE.MeshBasicMaterial( { color: 0x980000 } );
+const mesh = new THREE.Mesh( geometry, material );
+scene.add( mesh );
+
+const animate = function () {
+  requestAnimationFrame( animate );
 const vertices = new Float32Array( [ ...(function*(){
   for ( const z of [ 1.0, -1.0 ] ) {
     const prams = [
@@ -26,12 +32,6 @@ const vertices = new Float32Array( [ ...(function*(){
   }
 })() ] );
 geometry.setAttribute( "position", new THREE.BufferAttribute( vertices, 3 ) );
-const material = new THREE.MeshBasicMaterial( { color: 0x980000 } );
-const mesh = new THREE.Mesh( geometry, material );
-scene.add( mesh );
-
-const animate = function () {
-  requestAnimationFrame( animate );
   mesh.rotation.x += 0.01;
   mesh.rotation.y += 0.01;
   renderer.render( scene, camera );
