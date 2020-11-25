@@ -1,22 +1,12 @@
 
 import * as THREE from "../lib/three.module.js";
 
-const canvas = Object.assign( document.createElement( "canvas" ),
-  {
-    width: 500,
-    height: 500
-  }
-);
+const canvas = document.createElement( "canvas" );
+canvas.width = 500;
+canvas.height = 500;
 
-const contentArea = Object.assign( document.createElement( "div" ),
-  {
-  }
-);
-Object.assign( contentArea.style,
-  {
-    textAlign: "center"
-  }
-);
+const contentArea = document.createElement( "div" );
+contentArea.style.textAlign = "center";
 
 document.body.appendChild( contentArea ).appendChild( canvas );
 
@@ -28,14 +18,16 @@ const formData = {
       z: 5
     }
   },
-  vertices: [
-  ]
+  color: {
+    red: 0.596078431372549,
+    green: 0,
+    blue: 0
+  }
+  vertices: []
+  
 };
 
-const form = Object.assign( document.createElement( "form" ),
-  {
-  }
-);
+const form = document.createElement( "form" );
 
 function vertices_onChange( event ) {
   
@@ -94,7 +86,7 @@ scene.add( mesh );
 const animate = function () {
   requestAnimationFrame( animate );
   camera.position.set( formData.camera.position.x, formData.camera.position.y, formData.camera.position.z );
-  material.color.setRGB( 0.596078431372549, 0, 0 );
+  material.color.setRGB( formData.color.red, formData.color.green, formData.color.blue );
   geometry.setAttribute( "position", new THREE.BufferAttribute( new Float32Array( formData.vertices ), 3 ) );
   mesh.rotation.x += 0.01;
   mesh.rotation.y += 0.01;
