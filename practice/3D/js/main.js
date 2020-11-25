@@ -15,15 +15,19 @@ camera.position.z = 5;
 const renderer = new THREE.WebGLRenderer( { canvas } );
 
 const geometry = new THREE.BufferGeometry();
-const vertices = new Float32Array( [
-	-1.0, -1.0,  1.0,
-	 1.0, -1.0,  1.0,
-	 1.0,  1.0,  1.0,
-
-	 1.0,  1.0,  1.0,
-	-1.0,  1.0,  1.0,
-	-1.0, -1.0,  1.0
-] );
+const vertices = new Float32Array( [ ...(function*(){
+  for ( const z of [ 1.0, -1.0 ] ) {
+    const prams = [
+    -1.0, -1.0, z,
+     1.0, -1.0, z,
+     1.0,  1.0, z,
+     1.0,  1.0, z,
+    -1.0,  1.0, z,
+    -1.0, -1.0, z
+    ];
+    for ( const param of prams ) yield param;
+  }
+})() ] );
 geometry.setAttribute( "position", new THREE.BufferAttribute( vertices, 3 ) );
 const material = new THREE.MeshBasicMaterial( { color: 0x980000 } );
 const mesh = new THREE.Mesh( geometry, material );
