@@ -48,7 +48,7 @@ function vertices_onChange( event ) {
     
   }
   
-  vertices[ index ] = Number( event.target.value ) || 0.0;
+  formData.vertices[ index ] = Number( event.target.value ) || 0.0;
   
 }
 
