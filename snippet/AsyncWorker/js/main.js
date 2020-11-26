@@ -165,9 +165,7 @@ class AsyncWorker extends Worker {
 const worker = new AsyncWorker( "../js/worker.js", { type: "module" } );
 
 (async () => {
-  const values = worker.postMessage( [ 1, 2, 3 ] );
-  console.log( values );
-  for await ( const value of values ) {
+  for ( const value of ( await worker.postMessage( [ 1, 2, 3 ] ) ) ) {
     console.log( value );
   }
 
