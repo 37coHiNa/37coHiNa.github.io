@@ -35,11 +35,7 @@ class AsyncWorker extends Worker {
     
     super.postMessage( { requestID, args } );
     
-    console.log( args );
-    
     return ( async function* () {
-      
-      console.log( "async generator" );
       
       let index = 0;
       
@@ -66,6 +62,9 @@ class AsyncWorker extends Worker {
           })();
         
         } );
+        
+        console.log( `status=${ status }` );
+        console.log( message );
         
         if ( status != "" ) {
           
