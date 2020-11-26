@@ -1,5 +1,5 @@
 
-import * as THREE from "../lib/three.module.js";
+import * as THREE from "./lib/three.module.js";
 
 const canvas = document.createElement( "canvas" );
 canvas.width = 500;
