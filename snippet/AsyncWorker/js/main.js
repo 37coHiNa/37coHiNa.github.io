@@ -4,7 +4,7 @@ class AsyncWorker extends Worker {
   
   constructor( url ) {
   
-    super( url );
+    super( url, { type: "module" } );
     
     this.addEventListener( "message", event => {
       
@@ -22,7 +22,7 @@ class AsyncWorker extends Worker {
   
   #createRequestID() {
   
-    return Math.random() * Number.MAX_SAFE_INTEGER;
+    return ( Math.random() * 2 ** 53 ).toString( 16 ).padStart( 20, "0" );
     
   }
   
@@ -97,11 +97,3 @@ const worker = new AsyncWorker( "./js/worker.js", { type: "module" } );
     console.log( value );
   }
 })();
-
-setTimeout( async () => {
-  const values = worker.postMessage( 1, 2, 3 );
-  console.log( values );
-  for await ( const value of values ) {
-    console.log( value );
-  }
-}, 5000 );
