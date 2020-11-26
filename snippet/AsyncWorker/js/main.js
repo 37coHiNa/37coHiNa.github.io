@@ -126,7 +126,7 @@ class AsyncWorker extends Worker {
       
     super.postMessage( { requestID, args } );
     
-    return async ( function* () {
+    return ( async function* () {
       
       while (1) {
         
