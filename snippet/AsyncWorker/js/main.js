@@ -101,32 +101,32 @@ class AsyncWorker extends Worker {
     const requests = this.#requests;
     const request = new Request();
     
-    return async function* () {
+    const responseCache = [];
+    let count = 0;
       
-      const responseCache = [];
-      let count = 0;
-      
-      request.addEventListener( "response", event => {
+    request.addEventListener( "response", event => {
         
-        responseCache.push( event.data.message );
-        count++;
+      responseCache.push( event.data.message );
+      count++;
         
-      } );
+    } );
       
-      let status = "";
-      let error = null;
-      let length = null;
-      request.addEventListener( "close", event => {
+    let status = "";
+    let error = null;
+    let length = null;
+    request.addEventListener( "close", event => {
           
-        status = event.data.status;
-        error = event.data.message;
-        length = event.data.length;
+      status = event.data.status;
+      error = event.data.message;
+      length = event.data.length;
 
-      } );
+    } );
       
-      requests.set( requestID, request );
+    requests.set( requestID, request );
       
-      super.postMessage( { requestID, args } );
+    super.postMessage( { requestID, args } );
+    
+    return async function* () {
       
       while (1) {
         
