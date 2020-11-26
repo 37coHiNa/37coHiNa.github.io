@@ -35,7 +35,11 @@ class AsyncWorker extends Worker {
     
     super.postMessage( { requestID, args } );
     
+    console.log( args );
+    
     return ( async function* () {
+      
+      console.log( "async generator" );
       
       let index = 0;
       
@@ -84,10 +88,9 @@ class AsyncWorker extends Worker {
 const worker = new AsyncWorker( "../js/worker.js", { type: "module" } );
 
 (async () => {
-  const values = worker.postMessage( [ 1, 2, 3 ] );
+  const values = worker.postMessage( 1, 2, 3 );
   console.log( values );
   for await ( const value of values ) {
     console.log( value );
   }
-
-} )();
+})();
