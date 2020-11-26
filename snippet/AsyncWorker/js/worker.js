@@ -6,6 +6,8 @@ class WorkerRequest {
   #index = 0;
   
   constructor ( { requestID, args } ) {
+    
+    console.log( requestID, args );
   
     this.#requestID = requestID;
     this.#args = args;
@@ -64,6 +66,8 @@ class WorkerRequest {
 }
 
 self.addEventListener( "message", event => {
+  
+  console.log( event );
 
   const Request = new WorkerRequest( event.data );
   
