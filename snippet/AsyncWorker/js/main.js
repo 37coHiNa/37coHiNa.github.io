@@ -1,65 +1,63 @@
-class Request {
+class Request extends EventTarget {
   
   #index = 0;
   #length = null;
   #status = "";
   #cache = new Map();
   
-  #response;
-  #close;
-  
-  constructor( response = message => { }, close = () => {} ) {
-    
-    this.#response = response;
-    this.#close = close;
-    
+  constructor() {
   }
   
   get index() { return this.#index; }
   
-  set index( index ) { this.#index = index; }
-  
   get length() { return this.#length; }
   
-  set length( length ) { this.#length = length; }
-  
   get status() { return this.#status; }
-  
-  set status( status ) {
-    
-    const currentStatus = this.#status;
-    
-    if ( currentStatus != "" ) {
-      
-      throw new TypeError();
-    
-    }
-    
-    if ( status == "" ) {
-      
-      return;
-    
-    }
-
-    this.#status = status;
-    
-  }
                 
-  get cache() {
+  get cache() { return this.#cache; }
+                
+  #response( index, message, status ) {
   
-    return this.#cache;
-    
+    if ( status != "" ) {
+      
+      if ( this.#status != "" ) {
+          
+          throw new TypeError();
+      
+      }
+      
+      this.#status = status;
+      this.#length = index;
+      
+    } else if ( this.#index == index ) {
+        
+      for ( let m = message; this.#cache.has( this.#index ) ; ) {
+        
+        const data = { index: this.#index, message: m };
+        this.dispatchEvent( new MessageEvent( "response", { data } ) );
+        this.#index++;
+        m = this.#cache.get( this.#index );
+          
+      }
+        
+      if ( this.#status != "" && this.#length <= this.#index ) {
+        
+        const data = { status: this.#status, length: this.#length };
+        this.dispatchEvent( new MessageEvent( "close", { data } ) );
+          
+      }
+        
+    } else {
+        
+      this.#cache.set( index, message );
+        
+    }
+  
   }
 
   get response() {
     
     return this.#response;
-    
-  }
-                
-  get close() {
-    
-    return this.#close;
     
   }
   
@@ -81,34 +79,9 @@ class AsyncWorker extends Worker {
       console.log( `requestID=${ requestID }, status=${ status }, index=${ index }, message=${ message }` );
       
       const request = requests.get( requestID );
-      
-      if ( status != "" ) {
-        
-        request.status = status;
-        request.length = index;
-        
-      } else if ( request.index == index ) {
+      if ( request ) {
         
         request.response( message );
-        request.index++;
-        
-        for ( ; request.cache.has( request.index ) ; ) {
-          
-          const message = request.cache.get( request.index );
-          request.response( message );
-          request.index++;
-          
-        }
-        
-        if ( request.status != "" && request.length <= request.index ) {
-          
-          request.close();
-          
-        }
-        
-      } else {
-        
-        request.cache.set( index, message );
         
       }
       
@@ -118,7 +91,7 @@ class AsyncWorker extends Worker {
   
   #createRequestID() {
   
-    return Math.random();
+    return Math.random() * Number.MAX_SAFE_INTEGER;
     
   }
   
@@ -126,35 +99,59 @@ class AsyncWorker extends Worker {
     
     const requestID = this.#createRequestID();
     const requests = this.#requests;
-    const responses = [];
-    let done = false;
+    const request = new Request();
     
-    requests.set(
+    return async function* () {
       
-      requestID,
+      const responseCache = [];
+      let count = 0;
       
-      new Request(
+      request.addEventListener( "response", event => {
         
-        ( message ) => {
-          
-          responses.push( message );
-          
-        },
+        responseCache.push( event.data.message );
+        count++;
         
-        () => {
+      } );
+      
+      let status = "";
+      let error = null;
+      let length = null;
+      request.addEventListener( "close", event => {
           
-          done = true;
+        status = event.data.status;
+        error = event.data.message;
+        length = event.data.length;
+
+      } );
+      
+      requests.set( requestID, request );
+      
+      super.postMessage( { requestID, args } );
+      
+      while (1) {
+        
+        const next = new Promise( resolve => {
+        
+          (function _(){
+          
+            if ( responseCache.length > 0 ) resolve( responseCache.shift() );
+            else setTimeout( _, 0 );
+        
+          })();
+        
+        } );
+        
+        yield await next;
+        
+        if ( status != "" ) {
+          
+          console.log( `status=${ status }, count=${ count }, length=${ length }` );
+          
+          return;
           
         }
         
-      )
-    
-    );
-    
-    super.postMessage( { requestID, args } );
-    
-    return async function* () {
-      let index = 0;
+      }
       
     };
     
