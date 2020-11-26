@@ -163,7 +163,7 @@ const worker = new AsyncWorker( "../js/worker.js", { type: "module" } );
 
 (async () => {
   
-  for await ( const value of worker.postMessage( [ 1, 2, 3 ] ) {
+  for await ( const value of worker.postMessage( [ 1, 2, 3 ] ) ) {
     console.log( value );
   }
 
