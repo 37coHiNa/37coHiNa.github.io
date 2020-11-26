@@ -39,9 +39,9 @@ class AsyncWorker extends Worker {
       
       let index = 0;
       
-      while (1) {
+      for (;;) {
         
-        const { message, status } = await new Promise( resolve => {
+        const response = new Promise( resolve => {
         
           (function _(){
           
@@ -62,6 +62,10 @@ class AsyncWorker extends Worker {
           })();
         
         } );
+        
+        console.log( response );
+        
+        const { message, status } = await response;
         
         console.log( `status=${ status }` );
         console.log( message );
