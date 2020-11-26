@@ -4,7 +4,7 @@ class AsyncWorker extends Worker {
   
   constructor( url ) {
   
-    super( url, { type: "module" } );
+    super( url );
     
     this.addEventListener( "message", event => {
       
