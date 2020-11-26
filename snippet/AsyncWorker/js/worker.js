@@ -73,7 +73,7 @@ self.addEventListener( "message", event => {
   
   try {
   
-    console.time( `requestID=${ requestID }` );
+    console.time( `requestID=${ Request.requestID }` );
     
     for ( const arg of Request.args ) {
       
@@ -91,7 +91,7 @@ self.addEventListener( "message", event => {
     
   } finally {
   
-    console.timeEnd( `requestID=${ requestID }` );
+    console.timeEnd( `requestID=${ Request.requestID }` );
     
   }
   
