@@ -126,7 +126,7 @@ class AsyncWorker extends Worker {
       
     super.postMessage( { requestID, args } );
     
-    return async function* () {
+    return async ( function* () {
       
       while (1) {
         
@@ -153,7 +153,7 @@ class AsyncWorker extends Worker {
         
       }
       
-    };
+    } )();
     
   }
   
@@ -161,3 +161,10 @@ class AsyncWorker extends Worker {
 
 const worker = new AsyncWorker( "../js/worker.js", { type: "module" } );
 
+(async () => {
+  
+  for await ( const value of worker.postMessage( [ 1, 2, 3 ] ) {
+    console.log( value );
+  }
+
+} )();
