@@ -142,6 +142,8 @@ class AsyncWorker extends Worker {
         
         } );
         
+        console.log( next );
+        
         yield await next;
         
         if ( status != "" ) {
@@ -163,8 +165,9 @@ class AsyncWorker extends Worker {
 const worker = new AsyncWorker( "../js/worker.js", { type: "module" } );
 
 (async () => {
-  
-  for await ( const value of worker.postMessage( [ 1, 2, 3 ] ) ) {
+  const values = worker.postMessage( [ 1, 2, 3 ] );
+  console.log( values );
+  for await ( const value of values ) {
     console.log( value );
   }
 
