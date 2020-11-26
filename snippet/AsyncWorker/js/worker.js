@@ -1,21 +1,14 @@
 class WorkerRequest {
 
   #requestID;
-  #method;
   #args;
   #status = ""
+  #index = 0;
   
-  constructor ( { requestID, method, args } ) {
+  constructor ( { requestID, args } ) {
   
     this.#requestID = requestID;
-    this.#method = method;
     this.#args = args;
-    
-  }
-  
-  get method() {
-    
-    return this.#method;
     
   }
   
@@ -29,8 +22,10 @@ class WorkerRequest {
   
     const requestID = this.#requestID;
     const status = this.#status;
+    const index = this.#index;
     
-    return self.postMessage( { requestID, message, status } );
+    this.#index++;
+    return self.postMessage( { requestID, message, index, status } );
     
   }
   
@@ -74,19 +69,12 @@ self.addEventListener( "message", event => {
   
   try {
   
-    console.time( `requestID=${requestID}` );
+    console.time( `requestID=${ requestID }` );
     
-    switch ( Request.method ) {
-    
-      case "init" :
+    for ( const arg of Request.args ) {
       
-        Request.postMessage( true );
-        break;
-        
-      default :
+      Request.postMessage( arg );
       
-        throw new TypeError( `Unsupported method: ${Request.method}` );
-        
     }
     
     Request.returnSuccess();
@@ -99,7 +87,7 @@ self.addEventListener( "message", event => {
     
   } finally {
   
-    console.timeEnd( `requestID=${requestID}` );
+    console.timeEnd( `requestID=${ requestID }` );
     
   }
   
