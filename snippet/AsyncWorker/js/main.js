@@ -13,7 +13,7 @@ class AsyncWorker extends Worker {
       const { requestID, index, message, status } = event.data;
       console.log( `requestID=${ requestID }, status=${ status }, index=${ index }, message=${ message }` );
       
-      const request = requests.get( requestID );
+      const request = this.#equests.get( requestID );
       request.set( index, { message, status } );
       
     } );
