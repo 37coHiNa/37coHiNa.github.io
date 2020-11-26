@@ -90,10 +90,10 @@ class AsyncWorker extends Worker {
 
 const worker = new AsyncWorker( "../js/worker.js", { type: "module" } );
 
-(async () => {
+setTImeout( async () => {
   const values = worker.postMessage( 1, 2, 3 );
   console.log( values );
   for await ( const value of values ) {
     console.log( value );
   }
-})();
+}, 5000 );
