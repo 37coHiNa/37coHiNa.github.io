@@ -6,6 +6,7 @@ class Request extends EventTarget {
   #cache = new Map();
   
   constructor() {
+    super();
   }
   
   get index() { return this.#index; }
