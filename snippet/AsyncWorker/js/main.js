@@ -88,7 +88,7 @@ class AsyncWorker extends Worker {
   
 }
 
-const worker = new AsyncWorker( "../js/worker.js", { type: "module" } );
+const worker = new AsyncWorker( "./js/worker.js", { type: "module" } );
 
 (async () => {
   const values = worker.postMessage( 1, 2, 3 );
