@@ -39,34 +39,25 @@ class MyWorker extends Worker {
     
     super.postMessage( { requestID, method, args } );
     
-    for ( let index = 0; ; index++ ) {
-        
-      console.log( `async generator: for index=${ index }` );
+    let index = 0;
+    for (;;) {
         
       const { status, message } = await new Promise( resolve => {
+        
+        setInterval( () => {
           
-        (function _() {
-            
-          console.log( `check request index=${ index }` );
-          console.log( `${ request.get( index ) }` );
           if ( request.has( index ) ) {
 
-            console.log( `ok` );
             resolve( request.get( index ) );
             request.delete( index );
-
-          } else {
-
-            console.log( `ng` );
-            setTimeout( _, 3000 );
-
+            index++;
+            
           }
-
-        })();
+          
+        }, 0 );
           
       } );
-        
-      console.log( status, message );
+      
       yield message;
         
       if ( status ) {
