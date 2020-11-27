@@ -32,7 +32,7 @@ class PromisedWorker extends Worker {
 
   async * postMessage( method, ...args ) {
     
-    const requestID = ( Math.random() * 2 ** 53 ).toString( 16 ).padStart( 20 );
+    const requestID = ( Math.random() * 2 ** 53 ).toString( 16 ).padStart( 20, "0" );
     
     console.log( `[MyWorker.postMessage()] requestID=${ requestID }, method=${ method }, args=${ args }` );
     
