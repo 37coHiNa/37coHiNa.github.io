@@ -15,7 +15,7 @@ class MyWorker extends Worker {
       
       if ( !status ) {
         
-        messages.push( message );
+        this.#messages.push( message );
         
       } else {
         
@@ -46,6 +46,7 @@ class Request {
   
   #method;
   #args;
+  #status = "";
   
   constructor( { method, args } ) {
     
@@ -58,9 +59,13 @@ class Request {
   
   get args() { return this.#args; }
   
+  get status() { return this.#status; }
+  
   postMessage( massage ) {
     
-    self.postMessage( massage );
+    const status = this.#status;
+    
+    self.postMessage( { massage, status } );
     
   }
   
