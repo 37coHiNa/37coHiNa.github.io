@@ -142,38 +142,39 @@ class Request {
 }
 
 const methods = Object.create( null );
+const WorkerOnMessage = async event => {
+
+  const request = new Request( event.data );
+
+  try {
+
+    let redirect = request.method;
+
+    do {
+
+      const method = methods[ redirect ];
+      redirect = await method( request );
+
+    } while ( redirect != null );
+
+    return;
+
+  } catch ( error ) {
+
+    request.abort();
+    throw error;
+
+  } finally {
+
+    request.close();
+
+  }
+
+};
 
 if ( typeof WorkerGlobalScope != "undefined" ) {
   
-  self.addEventListener( "message", event => {
-
-    const request = new Request( event.data );
-    
-    try {
-    
-      let redirect = request.method;
-      
-      do {
-        
-        const method = methods[ redirect ];
-        redirect = method( request )
-        
-      } while ( redirect != null );
-      
-      return;
-      
-    } catch ( error ) {
-      
-      request.abort();
-      throw error;
-      
-    } finally {
-      
-      request.close();
-      
-    }
-    
-  } );
+  self.addEventListener( "message", WorkerOnMessage );
 
 }
 
