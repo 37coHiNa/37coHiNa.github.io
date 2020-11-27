@@ -15,6 +15,14 @@ Object.assign( PromisedWorker.methods,
       
       request.postMessage( "end" );
       
+      return "redirect";
+      
+    },
+  
+    redirect( request ) {
+      
+      request.postMessage( "redirect" );
+      
     }
     
   }
