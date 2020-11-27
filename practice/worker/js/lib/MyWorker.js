@@ -50,7 +50,7 @@ self.addEventListener( "message", event => {
 
   if ( typeof WorkerGlobalScope != "undefined" ) {
     
-    const request = Request( event.data );
+    const request = new Request( event.data );
     
     const method = methods[ request.method ];
     
