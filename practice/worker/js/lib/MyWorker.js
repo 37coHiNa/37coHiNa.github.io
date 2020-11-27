@@ -29,7 +29,7 @@ class MyWorker extends Worker {
 
   postMessage( method, args ) {
     
-    const requestID;//TODO
+    const requestID = Math.random();
     
     this.#requests.set( requestID, new Map() );
     
