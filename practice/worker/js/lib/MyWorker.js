@@ -22,15 +22,41 @@ class MyWorker extends Worker {
 
 }
 
+class Request {
+  
+  #method;
+  #args;
+  
+  constructor( { method, args } ) {
+    
+    this.#method = method;
+    this.#args = args;
+    
+  }
+
+  get method() { return this.#method; }
+  
+  get args() { return this.#args; }
+  
+  postMessage( massage ) {
+    
+    self.postMessage( massage );
+    
+  }
+  
+}
+
 self.addEventListener( "message", event => {
 
   if ( typeof WorkerGlobalScope != "undefined" ) {
     
-    const methodName = "main";
+    const request = Request( event.data );
     
-    if ( typeof methods[ methodName ] == "function" ) {
+    const method = methods[ request.method ];
+    
+    if ( typeof method == "function" ) {
       
-      methods[ methodName ]( `method=${ methodName }` );
+      method( request );
       
     }
     
