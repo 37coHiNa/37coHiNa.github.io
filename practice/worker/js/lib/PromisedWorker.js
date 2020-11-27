@@ -158,14 +158,7 @@ self.addEventListener( "message", event => {
     
     try {
     
-      const method = methods[ request.method ];
-    
-      if ( typeof method == "function" ) {
-      
-        method( request );
-      
-      }
-      
+      methods[ request.method ]( request );
       return;
       
     } catch ( error ) {
