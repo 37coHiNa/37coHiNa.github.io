@@ -27,7 +27,7 @@ class MyWorker extends Worker {
     
   }
 
-  postMessage( method, ...args ) {
+  async * postMessage( method, ...args ) {
     
     const requestID = Math.random();
     
@@ -39,48 +39,42 @@ class MyWorker extends Worker {
     
     super.postMessage( { requestID, method, args } );
     
-    return (async function*(){
-      
-      console.log( `async generator: start` );
-      
-      for ( let index = 0; ; index++ ) {
+    for ( let index = 0; ; index++ ) {
         
-        console.log( `async generator: for index=${ index }` );
+      console.log( `async generator: for index=${ index }` );
         
-        const { status, message } = await new Promise( resolve => {
+      const { status, message } = await new Promise( resolve => {
           
-          (function _() {
+        (function _() {
             
-            console.log( `check request index=${ index }` );
-            console.log( `${ request.get( index ) }` );
-            if ( request.has( index ) ) {
-              
-              console.log( `ok` );
-              resolve( request.get( index ) );
-              request.delete( index );
-              
-            } else {
-              
-              console.log( `ng` );
-              setTimeout( _, 3000 );
-              
-            }
-            
-          })();
+          console.log( `check request index=${ index }` );
+          console.log( `${ request.get( index ) }` );
+          if ( request.has( index ) ) {
+
+            console.log( `ok` );
+            resolve( request.get( index ) );
+            request.delete( index );
+
+          } else {
+
+            console.log( `ng` );
+            setTimeout( _, 3000 );
+
+          }
+
+        })();
           
-        } );
+      } );
         
-        console.log( status, message );
-        yield message;
+      console.log( status, message );
+      yield message;
         
-        if ( status ) {
-          break;
-        }
-        
+      if ( status ) {
+        return;
       }
-      
-    })();
-    
+        
+    }
+
   }
 
 }
