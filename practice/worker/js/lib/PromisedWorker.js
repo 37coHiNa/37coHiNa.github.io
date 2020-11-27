@@ -10,8 +10,6 @@ class PromisedWorker extends Worker {
       
       const { requestID, status, index, message } = event.data;
       
-      console.log( `[MyWorker.onMessage()] requestID=${ requestID }, status=${ status }, index=${ index }, message=${ message }` );
-      
       const request = this.#requests.get( requestID );
       
       if ( request != null ) {
@@ -33,9 +31,6 @@ class PromisedWorker extends Worker {
   async * postMessage( method, ...args ) {
     
     const requestID = ( Math.random() * 2 ** 53 ).toString( 16 ).padStart( 20, "0" );
-    
-    console.log( `[MyWorker.postMessage()] requestID=${ requestID }, method=${ method }, args=${ args }` );
-    
     const request = new Map();
     request.status = "";
     this.#requests.set( requestID, request );
@@ -120,8 +115,6 @@ class Request {
     const status = this.#status;
     const index = this.#index++;
     
-    console.log( `[Request.postMessage()] requestID=${ requestID }, status=${ status }, index=${ index }, message=${ message }` );
-    
     self.postMessage( { requestID, status, index, message } );
     
   }
@@ -150,16 +143,23 @@ class Request {
 
 const methods = Object.create( null );
 
-console.log( ` isWorker=${ typeof WorkerGlobalScope != "undefined" }` );
-self.addEventListener( "message", event => {
+if ( typeof WorkerGlobalScope != "undefined" ) {
+  
+  self.addEventListener( "message", event => {
 
-  if ( typeof WorkerGlobalScope != "undefined" ) {
-    
     const request = new Request( event.data );
     
     try {
     
-      methods[ request.method ]( request );
+      let redirect = request.method;
+      
+      do {
+        
+        const method = methods[ redirect ];
+        redirect = method( request )
+        
+      } while ( redirect != null );
+      
       return;
       
     } catch ( error ) {
@@ -173,8 +173,8 @@ self.addEventListener( "message", event => {
       
     }
     
-  }
+  } );
 
-} );
+}
 
 export { PromisedWorker as Worker, Request, methods };
