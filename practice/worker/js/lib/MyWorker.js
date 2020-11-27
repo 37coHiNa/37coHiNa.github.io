@@ -44,13 +44,21 @@ class MyWorker extends Worker {
         
       const { status, message } = await new Promise( resolve => {
         
-        setInterval( () => {
+        let $assertion = false;
+        
+        const intervalID = setInterval( () => {
           
-          if ( request.has( index ) ) {
+          if ( $assertion ) {
+            clearInterval( intervalID );
+            throw new Error();
+          }
+          
+          if ( $assertion = request.has( index ) ) {
 
             resolve( request.get( index ) );
             request.delete( index );
             index++;
+            clearInterval( intervalID );
             
           }
           
