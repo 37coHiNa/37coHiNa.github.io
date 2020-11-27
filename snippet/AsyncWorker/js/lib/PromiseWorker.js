@@ -170,11 +170,11 @@ const Action = new class {
   
 };
 
-console.log( typeof WorkerGlobalScope );
-if ( typeof WorkerGlobalScope != "undefined" ) {
 
-  self.addEventListener( "message", event => {
-  
+self.addEventListener( "message", event => {
+
+  if ( typeof WorkerGlobalScope != "undefined" ) {
+    
     const Request = new WorkerRequest( event.data );
 
     try {
@@ -199,8 +199,8 @@ if ( typeof WorkerGlobalScope != "undefined" ) {
     
     }
   
-  } );
+  }
 
-}
+} );
 
 export { PromiseWorker, WorkerRequest, Action };
