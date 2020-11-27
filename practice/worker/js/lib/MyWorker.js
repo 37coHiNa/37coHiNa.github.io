@@ -62,14 +62,14 @@ class Request {
   
   get status() { return this.#status; }
   
-  postMessage( massage ) {
+  postMessage( message ) {
     
     const requestID = this.#requestID;
     const status = this.#status;
     
-    console.log( `[Request.postMessage()] requestID=${ requestID }, massage=${ massage }, status=${ status }` );
+    console.log( `[Request.postMessage()] requestID=${ requestID }, message=${ message }, status=${ status }` );
     
-    self.postMessage( { requestID, massage, status } );
+    self.postMessage( { requestID, message, status } );
     
   }
   
