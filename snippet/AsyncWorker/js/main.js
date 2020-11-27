@@ -1,4 +1,4 @@
-import PromiseWorker from "./js/lib/PromiseWorker.js";
+import PromiseWorker from "../js/lib/PromiseWorker.js";
 
 const worker = new PromiseWorker( "./js/worker.js", { type: "module" } );
 
