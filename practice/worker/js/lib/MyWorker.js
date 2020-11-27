@@ -47,14 +47,18 @@ class MyWorker extends Worker {
           
           (function _() {
             
+            console.log( `check request index=${ index }` );
+            console.log( `${ request.get( index ) }` );
             if ( request.has( index ) ) {
               
+              console.log( `ok` );
               resolve( request.get( index ) );
               request.delete( index );
               
             } else {
               
-              setTimeout( _, 0 );
+              console.log( `ng` );
+              setTimeout( _, 3000 );
               
             }
             
