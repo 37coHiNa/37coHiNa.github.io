@@ -4,7 +4,7 @@ Action.methods.main = function( request, ...values ) {
 
   for ( const value of values ) {
     
-    request.postMessage( arg );
+    request.postMessage( value );
     
   }
   
