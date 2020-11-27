@@ -1,8 +1,22 @@
-import * as MyWorker from "../js/lib/MyWorker.js";
+import * as PromisedWorker from "../js/lib/PromisedWorker.js";
 
-MyWorker.methods.main = function( request ) {
-  console.log( request );
-  for ( const arg of request.args ) {
-    request.postMessage( arg );
+Object.assing( PromisedWorker.methods,
+  {
+    
+    main( request ) {
+      
+      request.postMessage( "start" );
+      
+      for ( const arg of request.args ) {
+        
+        request.postMessage( arg );
+        
+      }
+      
+      request.postMessage( "end" );
+      
+    }
+    
   }
-};
+
+);
