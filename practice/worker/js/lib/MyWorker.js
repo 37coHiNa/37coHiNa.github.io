@@ -41,9 +41,13 @@ class MyWorker extends Worker {
     
     return (async function*(){
       
+      console.log( `async generator: start` );
+      
       for ( let index = 0; ; index++ ) {
         
-        const { status, message } = new Promise( resolve => {
+        console.log( `async generator: for index=${ index }` );
+        
+        const { status, message } = await new Promise( resolve => {
           
           (function _() {
             
