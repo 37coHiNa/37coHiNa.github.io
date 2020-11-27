@@ -10,12 +10,12 @@ class MyWorker extends Worker {
     
     this.addEventListener( "message", event => {
       
-      const { requestID, status, message } = event.data;
+      const { requestID, status, index, message } = event.data;
       
-      console.log( `[MyWorker.onMessage()] requestID=${ requestID }, status=${ status }, message=${ message }` );
+      console.log( `[MyWorker.onMessage()] requestID=${ requestID }, status=${ status }, index=${ index }, message=${ message }` );
       
       const request = this.#requests.get( requestID );
-      //TODO
+      request.set( index, message );
       
     } );
     
@@ -33,9 +33,21 @@ class MyWorker extends Worker {
     
     console.log( `[MyWorker.postMessage()] requestID=${ requestID }, method=${ method }, args=${ args }` );
     
-    this.#requests.set( requestID, new Map() );
+    const request = new Map();
+    this.#requests.set( requestID, request );
     
     super.postMessage( { requestID, method, args } );
+    
+    return (function*(){
+      
+      for ( let index = 0;;) {
+        
+        console.log( request );
+        return;
+        
+      }
+      
+    })();
     
   }
 
@@ -47,6 +59,7 @@ class Request {
   #method;
   #args;
   #status = "";
+  #index = 0;
   
   constructor( { requestID, method, args } ) {
     
@@ -66,10 +79,21 @@ class Request {
     
     const requestID = this.#requestID;
     const status = this.#status;
+    const index = this.#index++;
     
-    console.log( `[Request.postMessage()] requestID=${ requestID }, message=${ message }, status=${ status }` );
+    console.log( `[Request.postMessage()] requestID=${ requestID }, status=${ status }, index=${ index }, message=${ message }` );
     
-    self.postMessage( { requestID, message, status } );
+    self.postMessage( { requestID, status, index, message } );
+    
+  }
+  
+  end() {
+    
+    if ( this.#status ) return;
+    
+    this.#status = "end";
+    
+    this.postMessage();
     
   }
   
@@ -88,6 +112,8 @@ self.addEventListener( "message", event => {
       method( request );
       
     }
+    
+    request.end();
     
   }
 
