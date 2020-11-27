@@ -1,6 +1,9 @@
 const methods = Object.create( null );
 
 class MyWorker extends Worker {
+  
+  #messages = [];
+  #done = false;
 
   constructor( ...args ) {
   
@@ -8,7 +11,17 @@ class MyWorker extends Worker {
     
     this.addEventListener( "message", event => {
       
-      console.log( event );
+      const { status, message } = event.data;
+      
+      if ( !status ) {
+        
+        messages.push( message );
+        
+      } else {
+        
+       this.#done =  true;
+        
+      }
       
     } );
     
@@ -17,6 +30,13 @@ class MyWorker extends Worker {
       console.error( event );
       
     } );
+    
+  }
+
+  postMessage( ...args ) {
+    
+    this.#done = false;
+    super.postMessage( ...args );
     
   }
 
