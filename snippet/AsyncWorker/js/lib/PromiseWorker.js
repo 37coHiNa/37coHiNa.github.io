@@ -1,4 +1,3 @@
-
 class PromiseWorker extends Worker {
   
   #requests = new Map();
@@ -156,7 +155,7 @@ class WorkerRequest {
   
 }
 
-const Action = new class {
+export const Action = new class {
 
   #methods = Object.create(null);
   
@@ -201,4 +200,4 @@ if ( typeof WorkerGlobalScope != "undefined" ) {
   
 } );
 
-export { PromiseWorker, WorkerRequest, Action };
+export { PromiseWorker, WorkerRequest };
