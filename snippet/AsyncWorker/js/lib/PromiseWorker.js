@@ -1,4 +1,4 @@
-class PromiseWorker extends Worker {
+export class PromiseWorker extends Worker {
   
   #requests = new Map();
   
@@ -82,7 +82,7 @@ class PromiseWorker extends Worker {
   
 }
 
-class WorkerRequest {
+export class WorkerRequest {
 
   #requestID;
   #method;
@@ -199,5 +199,3 @@ if ( typeof WorkerGlobalScope != "undefined" ) {
   }
   
 } );
-
-export { PromiseWorker, WorkerRequest };
