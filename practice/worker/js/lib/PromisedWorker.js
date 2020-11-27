@@ -150,6 +150,7 @@ class Request {
 
 const methods = Object.create( null );
 
+console.log( ` isWorker=${ typeof WorkerGlobalScope != "undefined" }` );
 self.addEventListener( "message", event => {
 
   if ( typeof WorkerGlobalScope != "undefined" ) {
