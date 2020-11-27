@@ -15,8 +15,8 @@ class MyWorker extends Worker {
       console.log( `[MyWorker.onMessage()] requestID=${ requestID }, status=${ status }, index=${ index }, message=${ message }` );
       
       const request = this.#requests.get( requestID );
-      request.set( index, message );
-      
+      request.set( index, { status, message } );
+
     } );
     
     this.addEventListener( "error", event => {
@@ -34,16 +34,40 @@ class MyWorker extends Worker {
     console.log( `[MyWorker.postMessage()] requestID=${ requestID }, method=${ method }, args=${ args }` );
     
     const request = new Map();
+    request.status = "";
     this.#requests.set( requestID, request );
     
     super.postMessage( { requestID, method, args } );
     
-    return (function*(){
+    return (async function*(){
       
-      for ( let index = 0;;) {
+      for ( let index = 0; ; index++ ) {
         
-        console.log( request );
-        return;
+        const { status, message } = new Promise( resolve => {
+          
+          (function _() {
+            
+            if ( request.has( index ) ) {
+              
+              resolve( request.get( index ) );
+              request.delete( index );
+              
+            } else {
+              
+              setTimeout( _, 0 );
+              
+            }
+            
+          })();
+          
+        } );
+        
+        console.log( status, message );
+        yield message;
+        
+        if ( status ) {
+          break;
+        }
         
       }
       
