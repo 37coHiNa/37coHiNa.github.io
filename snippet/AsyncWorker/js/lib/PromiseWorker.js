@@ -16,7 +16,7 @@ class PromiseWorker extends Worker {
     
     this.addEventListener( "error", event => {
       
-      console.error( event );
+      console.error( event.data );
       
     } );
     
