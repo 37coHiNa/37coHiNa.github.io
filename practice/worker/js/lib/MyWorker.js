@@ -27,7 +27,7 @@ class MyWorker extends Worker {
     
   }
 
-  postMessage( method, args ) {
+  postMessage( method, ...args ) {
     
     const requestID = Math.random();
     
