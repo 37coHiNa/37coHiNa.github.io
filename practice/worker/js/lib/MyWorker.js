@@ -67,6 +67,8 @@ class Request {
     const requestID = this.#requestID;
     const status = this.#status;
     
+    console.log( `[Request.postMessage()] requestID=${ requestID }, massage=${ massage }, status=${ status }` );
+    
     self.postMessage( { requestID, massage, status } );
     
   }
