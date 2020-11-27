@@ -1,6 +1,6 @@
-import * as MyWorker from "../js/lib/MyWorker.js";
+import * as PromisedWorker from "../js/lib/PromisedWorker.js";
 
-const worker = new MyWorker.Worker( "./js/worker.js", { type: "module" } );
+const worker = new PromisedWorker.Worker( "./js/worker.js", { type: "module" } );
 (async ()=>{
   for await ( const message of worker.postMessage( "main", "test message", "test message2", 123 ) ) {
     console.log( message );
