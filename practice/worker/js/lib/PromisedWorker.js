@@ -1,6 +1,4 @@
-const methods = Object.create( null );
-
-class MyWorker extends Worker {
+class PromisedWorker extends Worker {
   
   #requests = new Map();
 
@@ -15,7 +13,12 @@ class MyWorker extends Worker {
       console.log( `[MyWorker.onMessage()] requestID=${ requestID }, status=${ status }, index=${ index }, message=${ message }` );
       
       const request = this.#requests.get( requestID );
-      request.set( index, { status, message } );
+      
+      if ( request != null ) {
+        
+        request.set( index, { status, message } );
+        
+      }
 
     } );
     
@@ -29,7 +32,7 @@ class MyWorker extends Worker {
 
   async * postMessage( method, ...args ) {
     
-    const requestID = Math.random();
+    const requestID = ( Math.random() * 2 ** 53 ).toString( 16 ).padStart( 20 );
     
     console.log( `[MyWorker.postMessage()] requestID=${ requestID }, method=${ method }, args=${ args }` );
     
@@ -49,8 +52,10 @@ class MyWorker extends Worker {
         const intervalID = setInterval( () => {
           
           if ( $assertion ) {
+            
             clearInterval( intervalID );
             throw new Error();
+            
           }
           
           if ( $assertion = request.has( index ) ) {
@@ -67,9 +72,20 @@ class MyWorker extends Worker {
       } );
       
       yield message;
-        
+      
       if ( status ) {
-        return;
+        
+        const s = String( status ).toLowerCase();
+        switch ( s ) {
+        
+          case "success":
+          case "failure":
+            this.#requests.delete( requestID );
+            return;
+          default: throw new TypeError( `illegal status: ${ s }` );
+            
+        }
+        
       }
         
     }
@@ -98,8 +114,6 @@ class Request {
   
   get args() { return this.#args; }
   
-  get status() { return this.#status; }
-  
   postMessage( message ) {
     
     const requestID = this.#requestID;
@@ -112,17 +126,29 @@ class Request {
     
   }
   
-  end() {
+  close() {
     
     if ( this.#status ) return;
     
-    this.#status = "end";
+    this.#status = "success";
     
     this.postMessage();
     
   }
-  
+                
+  abort() {
+    
+    if ( this.#status ) return;
+    
+    this.#status = "failure";
+    
+    this.postMessage();
+    
+  }
+
 }
+
+const methods = Object.create( null );
 
 self.addEventListener( "message", event => {
 
@@ -130,18 +156,31 @@ self.addEventListener( "message", event => {
     
     const request = new Request( event.data );
     
-    const method = methods[ request.method ];
+    try {
     
-    if ( typeof method == "function" ) {
+      const method = methods[ request.method ];
+    
+      if ( typeof method == "function" ) {
       
-      method( request );
+        method( request );
+      
+      }
+      
+      return;
+      
+    } catch ( error ) {
+      
+      request.abort();
+      throw error;
+      
+    } finally {
+      
+      request.close();
       
     }
-    
-    request.end();
     
   }
 
 } );
 
-export { MyWorker as Worker, methods };
+export { PromisedWorker as Worker, Request, methods };
