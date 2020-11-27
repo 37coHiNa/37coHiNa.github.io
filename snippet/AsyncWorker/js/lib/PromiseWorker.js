@@ -3,7 +3,7 @@ class PromiseWorker extends Worker {
   #requests = new Map();
   
   constructor( url ) {
-  
+    
     super( url, { type: "module" } );
     
     this.addEventListener( "message", event => {
@@ -16,7 +16,7 @@ class PromiseWorker extends Worker {
     
     this.addEventListener( "error", event => {
       
-      console.error( event.data );
+      console.error( event );
       
     } );
     
