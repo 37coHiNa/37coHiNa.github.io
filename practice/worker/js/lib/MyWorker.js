@@ -12,7 +12,7 @@ class MyWorker extends Worker {
       
       const { requestID, status, message } = event.data;
       
-      console.log( `requestID=${ requestID }, status=${ status }, message=${ message }` );
+      console.log( `[MyWorker.onMessage()] requestID=${ requestID }, status=${ status }, message=${ message }` );
       
       const request = this.#requests.get( requestID );
       //TODO
@@ -30,6 +30,8 @@ class MyWorker extends Worker {
   postMessage( method, args ) {
     
     const requestID = Math.random();
+    
+    console.log( `[MyWorker.postMessage()] requestID=${ requestID }, method=${ method }, args=${ args }` );
     
     this.#requests.set( requestID, new Map() );
     
