@@ -1,4 +1,4 @@
-import Action from "./js/lib/PromiseWorker.js";
+import Action from "../js/lib/PromiseWorker.js";
 
 Action.methods.main = function( request, ...values ) {
 
