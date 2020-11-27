@@ -6,6 +6,18 @@ class MyWorker extends Worker {
   
     super( ...args );
     
+    this.addEventListener( "message", event => {
+      
+      console.log( event );
+      
+    } );
+    
+    this.addEventListener( "error", event => {
+      
+      console.error( event );
+      
+    } );
+    
   }
 
 }
