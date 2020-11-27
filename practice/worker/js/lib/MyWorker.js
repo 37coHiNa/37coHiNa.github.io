@@ -2,8 +2,7 @@ const methods = Object.create( null );
 
 class MyWorker extends Worker {
   
-  #messages = [];
-  #done = false;
+  #requests = new Map();
 
   constructor( ...args ) {
   
@@ -11,17 +10,12 @@ class MyWorker extends Worker {
     
     this.addEventListener( "message", event => {
       
-      const { status, message } = event.data;
+      const { requestID, status, message } = event.data;
       
-      if ( !status ) {
-        
-        this.#messages.push( message );
-        
-      } else {
-        
-       this.#done =  true;
-        
-      }
+      console.log( `requestID=${ requestID }, status=${ status }, message=${ message }` );
+      
+      const request = this.#requests.get( requestID );
+      //TODO
       
     } );
     
@@ -33,10 +27,13 @@ class MyWorker extends Worker {
     
   }
 
-  postMessage( ...args ) {
+  postMessage( method, args ) {
     
-    this.#done = false;
-    super.postMessage( ...args );
+    const requestID;//TODO
+    
+    this.#requests.set( requestID, new Map() );
+    
+    super.postMessage( { requestID, method, args } );
     
   }
 
@@ -44,12 +41,14 @@ class MyWorker extends Worker {
 
 class Request {
   
+  #requestID;
   #method;
   #args;
   #status = "";
   
-  constructor( { method, args } ) {
+  constructor( { requestID, method, args } ) {
     
+    this.#requestID = requestID;
     this.#method = method;
     this.#args = args;
     
@@ -63,9 +62,10 @@ class Request {
   
   postMessage( massage ) {
     
+    const requestID = this.#requestID;
     const status = this.#status;
     
-    self.postMessage( { massage, status } );
+    self.postMessage( { requestID, massage, status } );
     
   }
   
