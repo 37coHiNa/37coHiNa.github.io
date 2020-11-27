@@ -1,6 +1,6 @@
 import * as PromisedWorker from "../js/lib/PromisedWorker.js";
 
-Object.assing( PromisedWorker.methods,
+Object.assign( PromisedWorker.methods,
   {
     
     main( request ) {
