@@ -170,6 +170,7 @@ const Action = new class {
   
 };
 
+console.log( typeof WorkerGlobalScope );
 if ( typeof WorkerGlobalScope != "undefined" ) {
 
   self.addEventListener( "message", event => {
