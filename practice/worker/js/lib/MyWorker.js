@@ -22,4 +22,20 @@ class MyWorker extends Worker {
 
 }
 
+self.addEventListener( "message", event => {
+
+  if ( typeof WorkerGlobalScope != "undefined" ) {
+    
+    const methodName = "main";
+    
+    if ( typeof methods[ methodName ] == "function" ) {
+      
+      methods[ methodName ]( `method=${ methodName }` );
+      
+    }
+    
+  }
+
+} );
+
 export { MyWorker as Worker, methods };
