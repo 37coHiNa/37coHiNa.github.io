@@ -1,6 +1,6 @@
-import PromiseWorker from "../js/lib/PromiseWorker.js";
+import * as Lib from "../js/lib/PromiseWorker.js";
 
-const worker = new PromiseWorker( "./js/worker.js", { type: "module" } );
+const worker = new Lib.PromiseWorker( "./js/worker.js", { type: "module" } );
 
 (async () => {
   const values = worker.postMessage( 1, 2, 3 );
