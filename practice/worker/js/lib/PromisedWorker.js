@@ -45,39 +45,44 @@ class PromisedWorker extends Worker {
     this.#requests.set( requestID, request );
     
     super.postMessage( { requestID, method, args } );
-    
-    let index = 0;
-    for (;;) {
+
+    for ( let index = 0; ; index++ ) {
         
       const { status, message } = await new Promise( resolve => {
         
-        const $index = index;
-        
-        if ( request.has( $index ) ) {
+        if ( request.has( index ) ) {
 
-          resolve( request.get( $index ) );
+          resolve( request.get( index ) );
 
         } else {
 
-          request.set( $index, resolve );
+          request.set( index, resolve );
 
         }
 
       } );
       
       yield message;
-      request.delete( index++ );
+      request.delete( index );
       
       if ( status ) {
         
-        const s = String( status ).toLowerCase();
-        switch ( s ) {
-        
+        const status_LowerCase = String( status ).toLowerCase();
+        switch ( status_LowerCase ) {
+            
+          case "":
+            continue;
+            
           case "success":
-          case "failure":
             this.#requests.delete( requestID );
             return;
-          default: throw new TypeError( `illegal status: ${ s }` );
+            
+          case "failure":
+            this.#requests.delete( requestID );
+            throw message;
+            
+          default:
+            throw new TypeError( `illegal status: ${ s }` );
             
         }
         
@@ -129,13 +134,13 @@ class Request {
     
   }
                 
-  abort() {
+  abort( error ) {
     
     if ( this.#status ) return;
     
     this.#status = "failure";
     
-    this.postMessage();
+    this.postMessage( error );
     
   }
 
@@ -161,7 +166,7 @@ const WorkerOnMessage = async event => {
 
   } catch ( error ) {
 
-    request.abort();
+    request.abort( error );
     throw error;
 
   } finally {
