@@ -14,7 +14,17 @@ class PromisedWorker extends Worker {
 
       if ( request != null ) {
 
-        request.set( index, { status, message } );
+        const resolve = request.get( index );
+        
+        if ( resolve != null ) {
+          
+          resolve( { status, message } );
+          
+        } else {
+          
+          request.set( index, { status, message } );
+          
+        }
 
       }
 
@@ -32,7 +42,6 @@ class PromisedWorker extends Worker {
     
     const requestID = ( Math.random() * 2 ** 53 ).toString( 16 ).padStart( 20, "0" );
     const request = new Map();
-    request.status = "";
     this.#requests.set( requestID, request );
     
     super.postMessage( { requestID, method, args } );
@@ -42,31 +51,22 @@ class PromisedWorker extends Worker {
         
       const { status, message } = await new Promise( resolve => {
         
-        let $assertion = false;
+        const $index = index;
         
-        const intervalID = setInterval( () => {
-          
-          if ( $assertion ) {
-            
-            clearInterval( intervalID );
-            throw new Error();
-            
-          }
-          
-          if ( $assertion = request.has( index ) ) {
+        if ( request.has( $index ) ) {
 
-            resolve( request.get( index ) );
-            request.delete( index );
-            index++;
-            clearInterval( intervalID );
-            
-          }
-          
-        }, 0 );
-          
+          resolve( request.get( $index ) );
+
+        } else {
+
+          request.set( $index, resolve );
+
+        }
+
       } );
       
       yield message;
+      request.delete( index++ );
       
       if ( status ) {
         
