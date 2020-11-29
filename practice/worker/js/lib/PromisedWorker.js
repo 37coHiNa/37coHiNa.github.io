@@ -1,31 +1,35 @@
 class PromisedWorker extends Worker {
   
   #requests = new Map();
+  
+  static #OnMessage = event => {
+
+    const { requestID, status, index, message } = event.data;
+
+    const request = this.#requests.get( requestID );
+
+    if ( request != null ) {
+
+      request.set( index, { status, message } );
+
+    }
+
+  };
+
+  static #OnError = event => {
+
+    console.error( event );
+
+  };
 
   constructor( ...args ) {
-  
-    super( ...args );
-    
-    this.addEventListener( "message", event => {
-      
-      const { requestID, status, index, message } = event.data;
-      
-      const request = this.#requests.get( requestID );
-      
-      if ( request != null ) {
-        
-        request.set( index, { status, message } );
-        
-      }
 
-    } );
-    
-    this.addEventListener( "error", event => {
-      
-      console.error( event );
-      
-    } );
-    
+    super( ...args );
+
+    this.addEventListener( "message", this.constructor.#OnMessage );
+
+    this.addEventListener( "error", this.constructor.#OnError );
+
   }
 
   async * postMessage( method, ...args ) {
