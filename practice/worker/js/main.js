@@ -1,15 +1,9 @@
-import * as PromisedWorker from "../js/lib/PromisedWorker.js";
+import PromisedWorker from "../js/lib/SimplePromisedWorker.js";
 
-PromisedWorker.methods.test = function( request ) {
-  
-  console.log( "!ERROR!" );
-  
-};
-
-const worker = new PromisedWorker.Worker( "./js/worker.js", { type: "module" } );
-(async ()=>{
-  for await ( const message of worker.postMessage( "main", "test message", "test message2", 123 ) ) {
-    console.log( message );
-  }
-})();
+const worker = new PromisedWorker( "./js/worker.js", { type: "module" } );
 window.myWorker = worker;
+(async ()=>{
+  const value1 = await worker.postMessage( 20 );
+  const value2 = await worker.postMessage( value1 );
+  console.log( [ value1, value2 ] );
+})();
