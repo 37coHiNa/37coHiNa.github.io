@@ -1,30 +1,8 @@
-import * as PromisedWorker from "../js/lib/PromisedWorker.js";
+import PromisedWorker from "../js/lib/SimplePromisedWorker.js";
 
-Object.assign( PromisedWorker.methods,
-  {
-    
-    main( request ) {
-      
-      request.postMessage( "start" );
-      
-      for ( const arg of request.args ) {
-        
-        request.postMessage( arg );
-        
-      }
-      
-      request.postMessage( "end" );
-      
-      return "redirect";
-      
-    },
+PromisedWorker.setMainFunction( value => {
   
-    redirect( request ) {
-      
-      request.postMessage( "redirect" );
-      
-    }
-    
-  }
-
-);
+  console.log( value );
+  return BigInt( value ) ** BigInt( value );
+  
+} );
