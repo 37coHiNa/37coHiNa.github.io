@@ -92,8 +92,8 @@ class UUID_crypto_typed_array {
 
     //RFC 4122
     const HEXOCTETS = Object.freeze( [ ...Array(256) ].map( ( e, i ) => i.toString( 16 ).padStart( 2, "0" ).toUpperCase() ) );
-    const VARSION = 0x40n;
-    const VARIANT = 0x80n;
+    const VARSION = 0x40;
+    const VARIANT = 0x80;
 
     for (;;) {
 
