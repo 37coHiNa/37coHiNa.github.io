@@ -100,21 +100,21 @@ class UUID_crypto_bigint64 {
       const random128 = new BigUint64Array( crypto.getRandomValues( new Uint32Array(4) ).buffer );
       yield "" +
         HEXOCTETS[ random128[0] & 0xffn ] +
-        HEXOCTETS[ random128[0] >>> 8n & 0xffn ] +
-        HEXOCTETS[ random128[0] >>> 16n & 0xffn ] +
-        HEXOCTETS[ random128[0] >>> 24n & 0xffn ] + "-" +
-        HEXOCTETS[ random128[0] >>> 32n & 0xffn ] +
-        HEXOCTETS[ random128[0] >>> 40n & 0xffn ] + "-" +
-        HEXOCTETS[ random128[0] >>> 48n & 0x0fn | VARSION ] +
-        HEXOCTETS[ random128[0] >>> 56n & 0xffn ] + "-" +
+        HEXOCTETS[ random128[0] >> 8n & 0xffn ] +
+        HEXOCTETS[ random128[0] >> 16n & 0xffn ] +
+        HEXOCTETS[ random128[0] >> 24n & 0xffn ] + "-" +
+        HEXOCTETS[ random128[0] >> 32n & 0xffn ] +
+        HEXOCTETS[ random128[0] >> 40n & 0xffn ] + "-" +
+        HEXOCTETS[ random128[0] >> 48n & 0x0fn | VARSION ] +
+        HEXOCTETS[ random128[0] >> 56n & 0xffn ] + "-" +
         HEXOCTETS[ random128[1] & 0x3fn | VARIANT ] +
-        HEXOCTETS[ random128[1] >>> 8n & 0xffn ] + "-" +
-        HEXOCTETS[ random128[1] >>> 16n & 0xffn ] +
-        HEXOCTETS[ random128[1] >>> 24n & 0xffn ] +
-        HEXOCTETS[ random128[1] >>> 32n & 0xffn ] +
-        HEXOCTETS[ random128[1] >>> 40n & 0xffn ] +
-        HEXOCTETS[ random128[1] >>> 48n & 0xffn ] +
-        HEXOCTETS[ random128[1] >>> 56n & 0xffn ];
+        HEXOCTETS[ random128[1] >> 8n & 0xffn ] + "-" +
+        HEXOCTETS[ random128[1] >> 16n & 0xffn ] +
+        HEXOCTETS[ random128[1] >> 24n & 0xffn ] +
+        HEXOCTETS[ random128[1] >> 32n & 0xffn ] +
+        HEXOCTETS[ random128[1] >> 40n & 0xffn ] +
+        HEXOCTETS[ random128[1] >> 48n & 0xffn ] +
+        HEXOCTETS[ random128[1] >> 56n & 0xffn ];
 
     }
 
