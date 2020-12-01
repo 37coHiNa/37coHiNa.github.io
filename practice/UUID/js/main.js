@@ -170,7 +170,7 @@ class UUID_crypto_bigint {
 
 }
 
-for ( const target of [ UUID_origin, UUID_crypto_spread, UUID_crypto_bigint64 ] ) {
+for ( const target of [ UUID_origin, UUID_crypto_spread, UUID_crypto_bigint64, UUID_crypto_bigint ] ) {
   for ( const times of Array( 10 ).fill( 1 ).map( ( v, i ) => v + i ) ) {
     const timeKey = `${ times }: ${ target.name }`;
     const uuids = [];
