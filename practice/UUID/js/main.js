@@ -86,35 +86,35 @@ class UUID_crypto_spread {
 
 }
 
-class UUID_crypto_typed_array {
+class UUID_crypto_bigint64 {
 
   static #uuidIte = ( function* () {
 
     //RFC 4122
     const HEXOCTETS = Object.freeze( [ ...Array(256) ].map( ( e, i ) => i.toString( 16 ).padStart( 2, "0" ).toUpperCase() ) );
-    const VARSION = 0x40;
-    const VARIANT = 0x80;
+    const VARSION = 0x40n;
+    const VARIANT = 0x80n;
 
     for (;;) {
 
-      const random128 = crypto.getRandomValues( new Uint32Array(4) );
+      const random128 = new BigUint64Array( crypto.getRandomValues( new Uint32Array(4) ).buffer );
       yield "" +
-        HEXOCTETS[ random128[0] & 0xff ] +
-        HEXOCTETS[ random128[0] >>> 8 & 0xff ] +
-        HEXOCTETS[ random128[0] >>> 16 & 0xff ] +
-        HEXOCTETS[ random128[0] >>> 24 & 0xff ] + "-" +
-        HEXOCTETS[ random128[1] & 0xff ] +
-        HEXOCTETS[ random128[1] >>> 8 & 0xff ] + "-" +
-        HEXOCTETS[ random128[1] >>> 16 & 0x0f | VARSION ] +
-        HEXOCTETS[ random128[1] >>> 24 & 0xff ] + "-" +
-        HEXOCTETS[ random128[2] & 0x3f | VARIANT ] +
-        HEXOCTETS[ random128[2] >>> 8 & 0xff ] + "-" +
-        HEXOCTETS[ random128[2] >>> 16 & 0xff ] +
-        HEXOCTETS[ random128[2] >>> 24 & 0xff ] +
-        HEXOCTETS[ random128[3] & 0xff ] +
-        HEXOCTETS[ random128[3] >>> 8 & 0xff ] +
-        HEXOCTETS[ random128[3] >>> 16 & 0xff ] +
-        HEXOCTETS[ random128[3] >>> 24 & 0xff ];
+        HEXOCTETS[ random128[0] & 0xffn ] +
+        HEXOCTETS[ random128[0] >>> 8n & 0xffn ] +
+        HEXOCTETS[ random128[0] >>> 16n & 0xffn ] +
+        HEXOCTETS[ random128[0] >>> 24n & 0xffn ] + "-" +
+        HEXOCTETS[ random128[0] >>> 32n & 0xffn ] +
+        HEXOCTETS[ random128[0] >>> 40n & 0xffn ] + "-" +
+        HEXOCTETS[ random128[0] >>> 48n & 0x0fn | VARSION ] +
+        HEXOCTETS[ random128[0] >>> 56n & 0xffn ] + "-" +
+        HEXOCTETS[ random128[1] & 0x3fn | VARIANT ] +
+        HEXOCTETS[ random128[1] >>> 8n & 0xffn ] + "-" +
+        HEXOCTETS[ random128[1] >>> 16n & 0xffn ] +
+        HEXOCTETS[ random128[1] >>> 24n & 0xffn ] +
+        HEXOCTETS[ random128[1] >>> 32n & 0xffn ] +
+        HEXOCTETS[ random128[1] >>> 40n & 0xffn ] +
+        HEXOCTETS[ random128[1] >>> 48n & 0xffn ] +
+        HEXOCTETS[ random128[1] >>> 56n & 0xffn ];
 
     }
 
@@ -128,7 +128,7 @@ class UUID_crypto_typed_array {
 
 }
 
-for ( const target of [ UUID_origin, UUID_crypto_spread, UUID_crypto_typed_array ] ) {
+for ( const target of [ UUID_origin, UUID_crypto_spread, UUID_crypto_bigint64 ] ) {
   for ( const times of Array( 10 ).fill( 1 ).map( ( v, i ) => v + i ) ) {
     const timeKey = `${ times }: ${ target.name }`;
     const uuids = [];
@@ -137,6 +137,5 @@ for ( const target of [ UUID_origin, UUID_crypto_spread, UUID_crypto_typed_array
       uuids.push( target.randomUUID() );
     }
     console.timeEnd( timeKey );
-    console.log( uuids );
   }
 }
