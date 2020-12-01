@@ -105,9 +105,9 @@ class UUID_crypto_typed_array {
         HEXOCTETS[ bytes[ 3 ] ] + "-" +
         HEXOCTETS[ bytes[ 4 ] ] +
         HEXOCTETS[ bytes[ 5 ] ] + "-" +
-        HEXOCTETS[ bytes[ 6 ] | VARSION ] +
+        HEXOCTETS[ bytes[ 6 ] & 0x0f | VARSION ] +
         HEXOCTETS[ bytes[ 7 ] ] + "-" +
-        HEXOCTETS[ bytes[ 8 ] | VARIANT ] +
+        HEXOCTETS[ bytes[ 8 ] & 0x3f | VARIANT ] +
         HEXOCTETS[ bytes[ 9 ] ] + "-" +
         HEXOCTETS[ bytes[ 10 ] ] +
         HEXOCTETS[ bytes[ 11 ] ] +
