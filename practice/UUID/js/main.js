@@ -38,7 +38,7 @@ class UUID_origin {
   
   static randomUUID() {
   
-    return this.##uuidIte.next().value;
+    return this.#uuidIte.next().value;
   
   }
 
@@ -80,7 +80,7 @@ class UUID_crypto_spread {
 
   static randomUUID() {
   
-    return this.##uuidIte.next().value;
+    return this.#uuidIte.next().value;
   
   }
 
@@ -122,7 +122,7 @@ class UUID_crypto_typed_array {
 
   static randomUUID() {
   
-    return this.##uuidIte.next().value;
+    return this.#uuidIte.next().value;
   
   }
 
