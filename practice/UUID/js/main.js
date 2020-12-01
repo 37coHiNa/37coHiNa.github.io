@@ -86,6 +86,48 @@ class UUID_crypto_spread {
 
 }
 
+class UUID_crypto_typed_array {
+
+  static #uuidIte = ( function* () {
+
+    //RFC 4122
+    const HEXOCTETS = Object.freeze( [ ...Array(256) ].map( ( e, i ) => i.toString( 16 ).padStart( 2, "0" ).toUpperCase() ) );
+    const VARSION = 0x40n;
+    const VARIANT = 0x80n;
+
+    for (;;) {
+
+      const bytes = crypto.getRandomValues( new Uint8Array( 16 ) );
+      yield "" +
+        HEXOCTETS[ bytes[ 0 ] ] +
+        HEXOCTETS[ bytes[ 1 ] ] +
+        HEXOCTETS[ bytes[ 2 ] ] +
+        HEXOCTETS[ bytes[ 3 ] ] + "-" +
+        HEXOCTETS[ bytes[ 4 ] ] +
+        HEXOCTETS[ bytes[ 5 ] ] + "-" +
+        HEXOCTETS[ bytes[ 6 ] | VARSION ] +
+        HEXOCTETS[ bytes[ 7 ] ] + "-" +
+        HEXOCTETS[ bytes[ 8 ] | VARIANT ] +
+        HEXOCTETS[ bytes[ 9 ] ] + "-" +
+        HEXOCTETS[ bytes[ 10 ] ] +
+        HEXOCTETS[ bytes[ 11 ] ] +
+        HEXOCTETS[ bytes[ 12 ] ] +
+        HEXOCTETS[ bytes[ 13 ] ] +
+        HEXOCTETS[ bytes[ 14 ] ] +
+        HEXOCTETS[ bytes[ 15 ] ];
+
+    }
+
+  } )();
+
+  static randomUUID() {
+  
+    return this.#uuidIte.next().value;
+  
+  }
+
+}
+
 class UUID_crypto_bigint64 {
 
   static #uuidIte = ( function* () {
@@ -170,7 +212,7 @@ class UUID_crypto_bigint {
 
 }
 
-for ( const target of [ UUID_origin, UUID_crypto_spread, UUID_crypto_bigint64, UUID_crypto_bigint ] ) {
+for ( const target of [ UUID_origin, UUID_crypto_spread, UUID_crypto_typed_array, UUID_crypto_bigint64, UUID_crypto_bigint ] ) {
   for ( const times of Array( 10 ).fill( 1 ).map( ( v, i ) => v + i ) ) {
     const timeKey = `${ times }: ${ target.name }`;
     const uuids = [];
