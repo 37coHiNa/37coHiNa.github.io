@@ -97,7 +97,7 @@ class UUID_crypto_bigint64 {
 
     for (;;) {
 
-      const random128 = new BigUint64Array( crypto.getRandomValues( new Uint32Array(4) ).buffer );
+      const random128 = new BigUint64Array( crypto.getRandomValues( new Int8Array( 16 ) ).buffer );
       yield "" +
         HEXOCTETS[ random128[0] & 0xffn ] +
         HEXOCTETS[ random128[0] >> 8n & 0xffn ] +
@@ -139,7 +139,7 @@ class UUID_crypto_bigint {
 
     for (;;) {
 
-      const [ most, least ] = new BigUint64Array( crypto.getRandomValues( new Uint32Array(4) ).buffer );
+      const [ most, least ] = new BigUint64Array( crypto.getRandomValues( new Int8Array( 16 ) ).buffer );
       yield "" +
         HEXOCTETS[ most & 0xffn ] +
         HEXOCTETS[ most >> 8n & 0xffn ] +
