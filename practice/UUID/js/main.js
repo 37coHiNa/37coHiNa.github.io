@@ -75,7 +75,7 @@ class UUID {
 
     }
 
-  } )();
+  } ).bind( this )();
 
   static randomUUID() {
   
