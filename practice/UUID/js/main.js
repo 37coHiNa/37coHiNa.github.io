@@ -118,18 +118,20 @@ class UUID {
 
       for ( let i = 0; i < 2; i++ ) {
 
-        for ( const [ val, low, up ] of HEX ) {
+        FOUND: {
 
-          if ( consume( low ) || consume( up ) ) {
+          for ( const [ val, low, up ] of HEX ) {
 
-            byte = byte << 4 + val;
-            break;
+            if ( consume( low ) || consume( up ) ) {
 
-          } else {
+              byte = byte << 4 + val;
+              break FOUND;
 
-            throw new TypeError( `not hex index=${ cursor }, char=${ stringRepresentation[ cursor ] }` );
+            }
 
           }
+
+          throw new TypeError( `not hex index=${ cursor }, char=${ stringRepresentation[ cursor ] }` );
       
         }
 
