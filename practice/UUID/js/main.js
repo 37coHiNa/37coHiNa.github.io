@@ -28,7 +28,7 @@ class UUID {
 
   get leastSignificantBits() { this.#setBits(); return this.#least; }
 
-  static HEXOCTETS = Object.freeze( [ ...Array(256) ].map( ( e, i ) => i.toString( 16 ).padStart( 2, "0" ).toUpperCase() ) );
+  static #HEXOCTETS = Object.freeze( [ ...Array(256) ].map( ( e, i ) => i.toString( 16 ).padStart( 2, "0" ).toUpperCase() ) );
   #stringRepresentation;
 
   toString() {
@@ -36,7 +36,7 @@ class UUID {
     if ( this.#stringRepresentation != null ) return this.#stringRepresentation;
 
     const bytes = new Uint8Array( this.#data );
-    const HEXOCTETS = this.constructor.HEXOCTETS;
+    const HEXOCTETS = this.constructor.#HEXOCTETS;
 
     this.#stringRepresentation = "" +
       HEXOCTETS[ bytes[ 0 ] ] +
@@ -57,6 +57,8 @@ class UUID {
       HEXOCTETS[ bytes[ 15 ] ];
 
   }
+
+  valueOf() { return this.toString(); }
   
   static #uuidIte = ( function* () {
 
@@ -80,10 +82,127 @@ class UUID {
     return this.#uuidIte.next().value;
   
   }
+                              
+  #parser =
+  class UUIDStringRepresentationParser {
+    
+    #stringRepresentation;
+    #cursor = 0;
+    #error;
+    
+    constructor( stringRepresentation ) {
+      
+      this.#stringRepresentation = String( stringRepresentation );
+      
+    }
 
-  static fromString() {
-    //TODO
+    #isFinished() { return this.#cursor >= this.#stringRepresentation.length; }
+
+    #consume( ch ) {
+    
+      if ( this.#isFinished() ) return false;
+
+      stringRepresentation = this.#stringRepresentation;
+
+      if ( stringRepresentation[ cursor ] ) {
+
+        cursor++;
+        return true;
+
+      }
+
+      return false;
+
+    }
+
+    static #HEX = Object.freeze( [ ...Array(16) ].map( ( undef, index ) => {
+
+      const hex = index.toString( 16 );
+      return Object.freeze( [ index, hex.toLowerCase(), hex.toUpperCase() ] );
+
+    } ) );
+
+    #hex() {
+
+      let val = 0;
+      const hex = this.constructor.#HEX;
+
+      for ( let i = 0; i < 2; i++ ) {
+
+        for ( const [ v, low, up ] of hex ) {
+
+          if ( this.#consume( low ) || this.#consume( up ) ) {
+
+            val = val << 4 + v;
+            break;
+
+          } else {
+
+            this.#error = new TypeError( `not hex. index=${ this.#cursor }` );
+            return 0;
+
+          }
+      
+        }
+
+      }
+
+      return val;
+
+    }
+
+    #separator() {
+
+      if ( this.#consume( "-" ) ) return true;
+
+      this.#error = new TypeError( `not separator. index=${ this.#cursor }` );
+      return false;
+
+    }
+          
+    parse() {
+        
+      const data = new Uint8Array( 16 );
+      
+      for ( let i = 0; i < data.length; i++ ) {
+
+        const hex = this.#hex();
+        data[ i ] = hex;
+        
+        switch ( i ) {
+          case 3:
+          case 5:
+          case 7:
+          case 9:
+            this.#separator();
+        }
+        
+        if ( this.#error ) return null;
+
+      }
+
+      return data.buffer;
+      
+    }
+    
+  };
+
+  static fromString( stringRepresentation ) {
+
+    const uuidBuffer = this.#parser( stringRepresentation ).parse();
+
+    if ( uuidBuffer == null ) throw new TypeError();
+
+    return this( uuidBytes );
+
   }
 
 }
 
+for ( let i = 0; i < 10; i++ ) {
+  const uuid = UUID.randomUUID();
+  console.log( uuid );
+  const str_uuid = String( uuid );
+  console.log( UUID.fromString( str_uuid ) );
+  console.log( str_uuid );
+}
