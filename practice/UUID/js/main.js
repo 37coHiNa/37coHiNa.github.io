@@ -16,17 +16,20 @@ class UUID {
 
   #most;
   #least;
-  #setBits() {
+  
+  get mostSignificantBits() {
 
-    if ( this.#most != null || this.#least != null ) return;
-
-    [ this.#most, this.#least ] = new BigInt64( this.#data );
+     if ( this.#most != null ) return this.#most;
+     return ( [ this.#most, this.#least ] = new BigInt64( this.#data ) )[ 0 ];
 
   }
 
-  get mostSignificantBits() { this.#setBits(); return this.#most; }
+  get leastSignificantBits() {
 
-  get leastSignificantBits() { this.#setBits(); return this.#least; }
+     if ( this.#least != null ) return this.#least;
+     return ( [ this.#most, this.#least ] = new BigInt64( this.#data ) )[ 1 ];
+
+  }
 
   static #HEXOCTETS = Object.freeze( [ ...Array(256) ].map( ( e, i ) => i.toString( 16 ).padStart( 2, "0" ).toUpperCase() ) );
   #stringRepresentation;
