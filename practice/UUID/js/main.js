@@ -83,7 +83,7 @@ class UUID {
   
   }
                               
-  #parser =
+  static #parser =
   class UUIDStringRepresentationParser {
     
     #stringRepresentation;
