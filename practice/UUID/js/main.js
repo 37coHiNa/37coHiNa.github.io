@@ -82,30 +82,27 @@ class UUID {
     return this.#uuidIte.next().value;
   
   }
-                              
-  static #parser =
-  class UUIDStringRepresentationParser {
-    
-    #stringRepresentation;
-    #cursor = 0;
-    #error;
-    
-    constructor( stringRepresentation ) {
-      
-      this.#stringRepresentation = String( stringRepresentation );
-      
-    }
 
-    #isFinished() { return this.#cursor >= this.#stringRepresentation.length; }
+  static fromString( stringRepresentation ) {
 
-    #consume( ch ) {
-    
-      if ( this.#isFinished() ) return false;
+    stringRepresentation = String( stringRepresentation );
 
-      stringRepresentation = this.#stringRepresentation;
+    const data = new Uint8Array( 16 );
 
-      if ( stringRepresentation[ cursor ] ) {
+    const HEX = Object.freeze( [ ...Array(16) ].map( ( undef, index ) => {
 
+      const hex = index.toString( 16 );
+      return Object.freeze( [ index, hex.toLowerCase(), hex.toUpperCase() ] );
+
+    } ) );
+
+    let cursor = 0;
+    const consume = ch => {
+
+      if ( cursor >= stringRepresentation.length ) return false;
+
+      if ( stringRepresentation[ cursor ] == ch ) {
+ 
         cursor++;
         return true;
 
@@ -113,33 +110,24 @@ class UUID {
 
       return false;
 
-    }
+    };
 
-    static #HEX = Object.freeze( [ ...Array(16) ].map( ( undef, index ) => {
+    for ( let i = 0; i < data.length; i++ ) {
 
-      const hex = index.toString( 16 );
-      return Object.freeze( [ index, hex.toLowerCase(), hex.toUpperCase() ] );
-
-    } ) );
-
-    #hex() {
-
-      let val = 0;
-      const hex = this.constructor.#HEX;
+      let byte = 0;
 
       for ( let i = 0; i < 2; i++ ) {
 
-        for ( const [ v, low, up ] of hex ) {
+        for ( const [ val, low, up ] of HEX ) {
 
-          if ( this.#consume( low ) || this.#consume( up ) ) {
+          if ( consume( low ) || consume( up ) ) {
 
-            val = val << 4 + v;
+            byte = byte << 4 + val;
             break;
 
           } else {
 
-            this.#error = new TypeError( `not hex. index=${ this.#cursor }` );
-            return 0;
+            throw new TypeError( `not hex. index=${ cursor }` );
 
           }
       
@@ -147,53 +135,19 @@ class UUID {
 
       }
 
-      return val;
-
-    }
-
-    #separator() {
-
-      if ( this.#consume( "-" ) ) return true;
-
-      this.#error = new TypeError( `not separator. index=${ this.#cursor }` );
-      return false;
-
-    }
-          
-    parse() {
+      data[ i ] = byte;
         
-      const data = new Uint8Array( 16 );
-      
-      for ( let i = 0; i < data.length; i++ ) {
-
-        const hex = this.#hex();
-        data[ i ] = hex;
-        
-        switch ( i ) {
-          case 3:
-          case 5:
-          case 7:
-          case 9:
-            this.#separator();
-        }
-        
-        if ( this.#error ) return null;
-
+      switch ( i ) {
+        case 3:
+        case 5:
+        case 7:
+        case 9:
+          if ( ! consume( "-" ) ) throw new TypeError( `not separator. index=${ cursor }` );
       }
 
-      return data.buffer;
-      
     }
-    
-  };
 
-  static fromString( stringRepresentation ) {
-
-    const uuidBuffer = this.#parser( stringRepresentation ).parse();
-
-    if ( uuidBuffer == null ) throw new TypeError();
-
-    return this( uuidBytes );
+    return new this( data.buffer );
 
   }
 
