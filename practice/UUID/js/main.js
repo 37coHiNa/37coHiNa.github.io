@@ -38,7 +38,7 @@ class UUID {
     const bytes = new Uint8Array( this.#data );
     const HEXOCTETS = this.constructor.#HEXOCTETS;
 
-    this.#stringRepresentation = "" +
+    return this.#stringRepresentation =
       HEXOCTETS[ bytes[ 0 ] ] +
       HEXOCTETS[ bytes[ 1 ] ] +
       HEXOCTETS[ bytes[ 2 ] ] +
