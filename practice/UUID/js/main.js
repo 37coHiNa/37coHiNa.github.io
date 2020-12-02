@@ -127,7 +127,7 @@ class UUID {
 
           } else {
 
-            throw new TypeError( `not hex. index=${ cursor }` );
+            throw new TypeError( `not hex index=${ cursor }, char=${ stringRepresentation[ cursor ] }` );
 
           }
       
@@ -142,7 +142,7 @@ class UUID {
         case 5:
         case 7:
         case 9:
-          if ( ! consume( "-" ) ) throw new TypeError( `not separator. index=${ cursor }` );
+          if ( ! consume( "-" ) ) throw new TypeError( `not separator index=${ cursor }, char=${ stringRepresentation[ cursor ] }` );
       }
 
     }
