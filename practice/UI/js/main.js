@@ -4,7 +4,7 @@ self.addEventListener( "keydown", KeyboardEvent => {
 
   for ( const [ id, resolve ] of KeydownEvents ) {
 
-    resolve( KeybordEvent );
+    resolve( KeyboardEvent );
 
   }
 
@@ -19,4 +19,4 @@ setInterval( async () => {
   const KeydownEvent = await new Promise( resolve => KeydownEvents.set( id, resolve ) );
   console.log( KeydownEvent );
 
-} );
+}, 3000 );
