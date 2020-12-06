@@ -7,8 +7,8 @@ class Card {
 
   constructor( suit, number ) {
   
-    if ( ! this.constructor.#SUITS.include( suit ) ) throw new TypeError();
-    if ( ! this.constructor.#NUMBERS.include( number ) ) throw new TypeError();
+    if ( ! this.constructor.#SUITS.includes( suit ) ) throw new TypeError();
+    if ( ! this.constructor.#NUMBERS.includes( number ) ) throw new TypeError();
 
     this.#suit = suit;
     this.#number = number;
