@@ -40,9 +40,18 @@ class Card {
 
 }
 
+class Player {
+
+  constructor( options = {} ) {
+
+  }
+
+}
 
 const PLAYER_COUNT = 2;
 const HAND_COUNT = 6;
 const STARTER_COUNT = 1;
 
 const cards = Card.deal( PLAYER_COUNT * HAND_COUNT + STARTER_COUNT );
+
+const players = [ new Player(), new Player() ];
