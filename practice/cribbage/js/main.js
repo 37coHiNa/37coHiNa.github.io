@@ -35,6 +35,8 @@ class Card {
       cards.push( new Card( SUITS[ suit ], NUMBERS[ number ] ) );
 
     }
+      
+    return cards;
   
   }
 
